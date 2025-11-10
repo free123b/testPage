@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KEEP UP</title>
+
+<style>
+  /* 🔤 Import SamsungOne font */
+  @font-face {
+    font-family: 'SamsungOne';
+    src: url('SamsungOne-400.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'SamsungOne', 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #222;
+    text-align: center;
+    transition: color 1s;
+  }
+
+  /* 🎨 Animated grayscale background */
+  body {
+    background: linear-gradient(270deg, #000000, #ffffff, #767676);
+    background-size: 600% 600%;
+    animation: gradientShift 22s ease infinite;
+    
+  }
+
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; color: #111; }
+    50%  { background-position: 100% 50%; color: #817c7c; }
+    100% { background-position: 0% 50%; color: #111; }
+  }
+
+  /* 💎 Glass quote container */
+  .glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    border-radius: 20px;
+    padding: 40px 50px;
+    max-width: 720px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition: background 1s ease;
+  }
+
+  #quote {
+    font-size: 1.7rem;
+    line-height: 1.6;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    transition: opacity 0.8s ease;
+    opacity: 0;
+  }
+
+  #author {
+    margin-top: 12px;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.9);
+    transition: opacity 0.8s ease;
+    opacity: 0;
+  }
+
+  #refresh {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    
+  }
+
+  #refresh:hover {
+    color: #ff0000;
+  }
+
+</style>
+</head>
+<body>
+  <div class="glass">
+    <div id="quote">Loading motivation...</div>
+    <div id="author"></div>
+  </div>
+  <div id="refresh" onclick="loadQuote()">↻ New quote</div>
+
+  <script>
+    async function loadQuote() {
+      const quoteEl = document.getElementById("quote");
+      const authorEl = document.getElementById("author");
+      quoteEl.style.opacity = 0;
+      authorEl.style.opacity = 0;
+      try {
+        const res = await fetch("https://zenquotes.io/api/random");
+        const data = await res.json();
+        const quote = data[0];
+        setTimeout(() => {
+          quoteEl.textContent = "“" + quote.q + "”";
+          authorEl.textContent = "— " + quote.a;
+          quoteEl.style.opacity = 1;
+          authorEl.style.opacity = 1;
+        }, 400);
+      } catch (err) {
+        quoteEl.textContent = "Stay strong — progress takes time.";
+        authorEl.textContent = "";
+        quoteEl.style.opacity = 1;
+      }
+    }
+
+    loadQuote();
+  </script>
+
+ 
+</body>
+
+</html>
